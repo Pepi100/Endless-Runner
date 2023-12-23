@@ -7,11 +7,11 @@ A simple game that can be played on a 8x8 LED matrix.
 </p>
 
 
-
-<img src="https://github.com/Pepi100/IntroductionToRobotics/blob/master/%236%20-%20Environment%20Monitor%20and%20Logger/Diagram.png" align="right"
-     alt="Diagram" width="500">
-
 #### Components Used
+
+<img src="https://github.com/Pepi100/Endless-Runner/blob/master/Birdseye.png" align="right"
+     alt="Diagram" width="700">
+
 
 * 1x 8x8 LED Martrix
 * 1x MAX7219 Driver
@@ -29,44 +29,37 @@ A simple game that can be played on a 8x8 LED matrix.
 * 1x 100&#8486; rezistor
 * many colorful wires
 
+[Demo](https://www.youtube.com/watch?v=fO3gBPfXR-w)
 
 #### Technical Task
 >The task involves developing a complete game on the 8x8 LED Matrix.
 
+### The game:
+     
+"Endless Runner" is a fast-paced endless game designed to run on an Arduino. The goal is simple: survive for as long as possible by skillfully jumping over and crouching under obstacles. The game progressively intensifies as the obstacles aproach at a higher and higher speed as the player travels more.
 
 
-  <summary> How it works:</summary>
+
+<summary> How it works:</summary>
 
   #### Main Loop
-  <img src="https://github.com/Pepi100/IntroductionToRobotics/blob/master/%236%20-%20Environment%20Monitor%20and%20Logger/Loop.png" align="right"
-     alt="Diagram" width="500">
   
-  The main loop constantly reads data form the sensors and triggers the alert if necessary. It is also responsible for reading input from [serial](https://www.arduino.cc/reference/en/language/functions/communication/serial/), which it than passes to:
 
-  ```cpp
-    void advanceMenu(int option);
-  ```
-  This function takes over the main functionality of the program. It takes the input from the user and uses it to perform the required action, according to the number of the current menu. This function implements a giant switch.
+  The main loop constantly reads input from the joystick and passes it to specific functions, accorting to the current "state" variable value.
 
+| Value | Meaning |
+| :---:   | :---: |
+| 0 | Initial screen  |
+| 1 | Main menu  |
+| 2 | In game state, including game start and end screen  |
+| 3 | Settings  |
+| 4 | About  |
+| 5 | How to play  |
+| 6 | Leaderboard  |
+| 7 | Difficulty  |
 
+Each of these states is split into 2 main parts, display and logic, reprezented in code by two functions. 
 
-  ```cpp
-    void printMenu();
-  ```
-  Works identical to advanceMenu(), but is only responsible for printing the options available in the current menu.
+Display functions take care of the information that should appear on the LCD during a specific state. Display functions are only called when update tag has been set because we only want the display to update when new information needs to be displayed.
 
-
-
-  ```cpp
-  short movementMatrix[MENUS][MAX_MENU_OPTIONS]={
-    {-1,1,2,3,4},
-    {-1,11,12,13,0},
-    {-1,21,22,23,0},
-    {-1,31,32,33,0},
-    {-1,41,42,0,-1},
-  };
-  ```
-  In order to traverse faster between menus, I've implemented this movement matrix that keeps track of what menu (or submenu) the program should switch to next.
-
-
-
+Logic Functions take care of processing the user's input and overall logic of that state. These functions set the update tag.
